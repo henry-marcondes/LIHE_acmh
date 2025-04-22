@@ -24,7 +24,16 @@ o funcionamento do projeto.
 
 Execute as migrations do DJango com o seguinte comando
 
-```python manage.py makemigrations && python manage.py migrate```
+```
+python manage.py makemigrations && 
+python manage.py migrate
+```
+
+Após isso
+
+```
+python manage.py migrate public_site --database=mysql_db
+```
 
 OBS: certifique que o MySQL e/ou MongoDB esteja configurado corretamente
 
