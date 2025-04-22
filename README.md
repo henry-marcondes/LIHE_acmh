@@ -17,7 +17,7 @@ Instale o DJango versão 5.1.2
 
 Entre na pasta do projeto 
 
-```cd consumo```
+```cd base_project```
 
 Instalação das Dependências do Projeto
 
