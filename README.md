@@ -1,5 +1,5 @@
-# Univesp PI 2
-Código do projeto integrador 1 usando Django 5.1.2
+# Base Project
+Código do projeto base usando Django 5.1.2
 
 Crie um ambiente virtual (venv) do python3 
 
