@@ -7,7 +7,7 @@ class MySQLRouter:
         Valida de o model é do MySQL
     """
     def IsMySQLModel(self, model_name):
-        return True
+        return model_name == "product"
 
     """
         Valida de o model é do MongoDB
