@@ -3,11 +3,11 @@ Código do projeto integrador 1 usando Django 5.1.2
 
 Crie um ambiente virtual (venv) do python3 
 
-```python3 -m venv /path/to/new/virtual/environment```
+```python3 -m venv .venv```
 
 Faça o acesso do seu venv do python3
 
-```source /path/to/new/virtual/environment/bin/activate```
+```source .venv/bin/activate```
 
 Para mais detalhes acesse [venv](https://docs.python.org/pt-br/3/library/venv.html)
 
