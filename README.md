@@ -19,6 +19,10 @@ Entre na pasta do projeto
 
 ```cd consumo```
 
+Instalação das Dependências do Projeto
+
+```pip install -r requirements.txt```
+
 Execute as migrations do DJango com o seguinte comando
 
 ```python manage.py migrate```
