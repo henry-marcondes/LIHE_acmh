@@ -3,9 +3,11 @@ from django.utils import timezone
 
 class Product(models.Model):
     CONSTANT_LOAD_TYPE = (
-        ('source', 'Load Source'),
-        ('supply', 'Load Supply'),
+        ('source', 'source'),
+        ('supply', 'supply'),
     )
+
+    product_name = models.CharField(max_length=100, default="ACME")
 
     power = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
     power_factor = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False, default=1.0)
@@ -25,7 +27,8 @@ class Product(models.Model):
         db_table = 'product'
 
     def __str__(self):
-        return f"power {self.power} \
+        return f"name {self.product_name} \
+                 power {self.power} \
                  power_factor {self.power_factor} \
                  width {self.width} \
                  height {self.height} \

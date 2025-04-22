@@ -17,29 +17,51 @@
         <div class="box">
           <h2>Produz energia</h2>
           <label>Selecionar item:</label>
-          <select id="prod_selector">
+          <select id="supply_selector">
             <option value="">-- Selecione um item --</option>
+            {% for item in supply %}
+                <option value="{{ item.id }}"
+                        data-name="{{ item.product_name }}"
+                        data-power="{{ item.power }}"
+                        data-factor="{{ item.power_factor }}"
+                        data-width="{{ item.width }}"
+                        data-height="{{ item.height }}"
+                        data-depth="{{ item.depth }}">
+                {{ item.product_name }} ({{ item.power }} W)
+                </option>
+            {% endfor %}
           </select>
-          <button onclick="addItem('producer')">Adicionar</button>
-          <div id="producer_list"></div>
+          <button onclick="addItem('supply')">Adicionar</button>
+          <div id="supply_list"></div>
         </div>
     
         <!-- Consome energia -->
         <div class="box">
           <h2>Consome energia</h2>
           <label>Selecionar item:</label>
-          <select id="cons_selector">
+          <select id="source_selector">
             <option value="">-- Selecione um item --</option>
+            {% for item in source %}
+                <option value="{{ item.id }}"
+                        data-name="{{ item.product_name }}"
+                        data-power="{{ item.power }}"
+                        data-factor="{{ item.power_factor }}"
+                        data-width="{{ item.width }}"
+                        data-height="{{ item.height }}"
+                        data-depth="{{ item.depth }}">
+                {{ item.product_name }} ({{ item.power }} W)
+                </option>
+            {% endfor %}
           </select>
-          <button onclick="addItem('consumer')">Adicionar</button>
-          <div id="consumer_list"></div>
+          <button onclick="addItem('source')">Adicionar</button>
+          <div id="source_list"></div>
         </div>
       </div>
     
       <h2 style="text-align: center; margin-top: 20px;">Resultado</h2>
       <div class="result" id="results">
-        <p><strong>Produção Total: </strong><span id="total_prod">0</span> W</p>
-        <p><strong>Consumo Total: </strong><span id="total_cons">0</span> W</p>
+        <p><strong>Produção Total: </strong><span id="total_power_supply">0</span> W</p>
+        <p><strong>Consumo Total: </strong><span id="total_power_source">0</span> W</p>
         <hr>
         <p><strong>Área Total (Fonte): </strong><span id="supply_total_area">0</span> m&sup2;</p>
         <p><strong>Volume Total (Fonte): </strong><span id="supply_total_space">0</span> m&sup3;</p>
