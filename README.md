@@ -11,10 +11,6 @@ Faça o acesso do seu venv do python3
 
 Para mais detalhes acesse [venv](https://docs.python.org/pt-br/3/library/venv.html)
 
-Instale o DJango versão 5.1.2
-
-```python3 -m pip install django==5.1.2```
-
 Entre na pasta do projeto 
 
 ```cd base_project```
@@ -22,6 +18,9 @@ Entre na pasta do projeto
 Instalação das Dependências do Projeto
 
 ```pip install -r requirements.txt```
+
+Esse comando irá instalar todas as dependências necessárias para
+o funcionamento do projeto.
 
 Execute as migrations do DJango com o seguinte comando
 
