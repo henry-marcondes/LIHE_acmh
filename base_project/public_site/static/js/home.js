@@ -136,8 +136,8 @@ function updateResults() {
     document.getElementById('total_power_supply').textContent = totalSupply.toFixed(2);
     document.getElementById('total_power_source').textContent = totalSource.toFixed(2);
 
-    document.getElementById('supply_total_area').textContent = supplyTotalSpace.toFixed(2);
-    document.getElementById('supply_total_space').textContent = supplyTotalArea.toFixed(2);
+    document.getElementById('supply_total_area').textContent = supplyTotalArea.toFixed(2);
+    document.getElementById('supply_total_space').textContent = supplyTotalSpace.toFixed(2);
 
     document.getElementById('source_total_area').textContent = sourceTotalArea.toFixed(2);
     document.getElementById('source_total_space').textContent = sourceTotalSpace.toFixed(2);
