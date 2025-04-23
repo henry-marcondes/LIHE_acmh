@@ -26,6 +26,13 @@ JOSE WAGNER DE OLIVEIRA
 
 * [Link do site de Demonstração](https://google.com)
 
+## Preview
+
+<p float="left">
+  <img src="./images/b80ae4f7-a855-4e73-934b-af8204c2d360.jpeg" width="60%" />
+  <img src="./images/e18ae8d4-aaf8-42b0-be82-46d6bfbf5dcb.jpeg" width="60%" />
+</p>
+
 ## Instalação e Configuração
 
 Crie um ambiente virtual (venv) do python3 
