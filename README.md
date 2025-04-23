@@ -1,5 +1,32 @@
-# Base Project
-Código do projeto base usando Django 5.1.2
+# Univesp PI 1
+
+Projeto Integrador I
+
+## Dependências
+
+ * django 5.1.2
+ * faker 30.8.1
+ * mysqlclient 2.2.5
+ * python-dotenv 1.0.1
+
+## Participantes:
+
+```
+MARCELO ANDRADE DA SILVA
+LUCAS CAMPOS ACHCAR
+ANTONIO DONIZETE DRAGO
+HENRY FERNANDO ESPINDOLA MARCONDES
+LUIZ GUSTAVO MUNIZ MOTA PEREIRA
+PIETRO SALLUM FERREIRA
+CRISTINA SILVA GOMES RIBEIRO
+JOSE WAGNER DE OLIVEIRA
+```
+
+## Demo do projeto
+
+* [Link do site de Demonstração](https://google.com)
+
+## Instalação e Configuração
 
 Crie um ambiente virtual (venv) do python3 
 
@@ -22,22 +49,37 @@ Instalação das Dependências do Projeto
 Esse comando irá instalar todas as dependências necessárias para
 o funcionamento do projeto.
 
+## Instalação de uma instância Docker MySQL
+
+Entre na pasta ```mysql-docker``` e digite o seguinte comando
+
+```docker compose up -d```
+
+OBS: Certamente você deverá habilitar o uso externo do MySQL para o usuário 'root'
+não irei explicar como se faz isso, caso não consiga, você pode usar outras alternativas
+de instalação do MySQL, o processo não depende do método de instalação e sim do acesso ao MySQL. 
+
+## Configuração das migrations do MySQL
+
 Execute as migrations do DJango com o seguinte comando
 
-```
-python manage.py makemigrations && 
-python manage.py migrate
-```
+```python manage.py makemigrations```
 
-Após isso
+```python manage.py migrate```
 
-```
-python manage.py migrate public_site --database=mysql_db
-```
+```python manage.py migrate public_site --database=mysql_db```
 
-OBS: certifique que o MySQL e/ou MongoDB esteja configurado corretamente
+Caso queira fazer testes, utilize o seguinte comando para gerar 'dados fakes
 
-Rode o projeto
+```python manage.py fake_data```
+
+OBS: certifique que o MySQL esteja configurado corretamente para 
+todos os comandos acima funcionarem corretamente
+
+## Rodando o Projeto
+
+Após feito toda a instalação e configuração, digite o seguinte comando no terminal
+dentro da pasta ```base_project``` 
 
 ```python manage.py runserver```
 
