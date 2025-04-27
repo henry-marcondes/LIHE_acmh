@@ -49,6 +49,23 @@ Entre na pasta do projeto
 
 ```cd base_project```
 
+Faça uma copia do ```base_project/.env-exemplo``` para ```base_project/.env```
+
+Abra o ```base_project/.env``` e faça as configurações do MySQL
+
+```
+DEBUG_MODE=True
+
+DB_NAME=project         # nome do banco de dados
+DB_USER=seu_usuario     # usuário do banco de dados
+DB_PASSWORD=sua_senha   # senha do banco de dados
+DB_HOST=127.0.0.1       # ou o IP do servidor de banco de dados
+DB_PORT=3306            # porta padrão do MySQL
+
+DJANGO_SECRET_KEY="django-insecure-fl8su)fsgsisy-!y$cz-ff=*u4@7fxh)@o#3o2riesshqzqz%-"
+CSRF_COOKIE_SECURE=False
+```
+
 Instalação das Dependências do Projeto
 
 ```pip install -r requirements.txt```
