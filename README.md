@@ -66,16 +66,6 @@ OBS: Certamente você deverá habilitar o uso externo do MySQL para o usuário '
 não irei explicar como se faz isso, caso não consiga, você pode usar outras alternativas
 de instalação do MySQL, o processo não depende do método de instalação e sim do acesso ao MySQL. 
 
-## Configuração das migrations do MySQL
-
-Execute as migrations do DJango com o seguinte comando
-
-```python manage.py makemigrations```
-
-```python manage.py migrate```
-
-```python manage.py migrate public_site --database=mysql_db```
-
 ## Configuração do .env
 
 Faça uma copia do ```base_project/.env-exemplo``` para ```base_project/.env```
@@ -94,6 +84,16 @@ DB_PORT=3306            # porta padrão do MySQL
 DJANGO_SECRET_KEY="django-insecure-fl8su)fsgsisy-!y$cz-ff=*u4@7fxh)@o#3o2riesshqzqz%-"
 CSRF_COOKIE_SECURE=False
 ```
+
+## Configuração das migrations do MySQL
+
+Execute as migrations do DJango com o seguinte comando
+
+```python manage.py makemigrations```
+
+```python manage.py migrate```
+
+```python manage.py migrate public_site --database=mysql_db```
 
 Caso queira fazer testes, utilize o seguinte comando para gerar 'dados fakes
 
