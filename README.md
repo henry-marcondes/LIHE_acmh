@@ -95,7 +95,7 @@ Execute as migrations do DJango com o seguinte comando
 
 ```python manage.py migrate public_site --database=mysql_db```
 
-Caso queira fazer testes, utilize o seguinte comando para gerar 'dados fakes
+Caso queira fazer testes, utilize o seguinte comando para gerar 'dados fakes'
 
 ```python manage.py fake_data```
 
