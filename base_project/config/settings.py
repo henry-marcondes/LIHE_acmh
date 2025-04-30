@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 
 from logging.handlers import RotatingFileHandler
 
+
 # Carrega as variáveis do arquivo .env
 load_dotenv()
 
