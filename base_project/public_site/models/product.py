@@ -17,6 +17,9 @@ class Product(models.Model):
     depth = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
     
     load_type = models.CharField(max_length=10, choices=CONSTANT_LOAD_TYPE, blank=False, null=False)
+    voltage = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False, default=110.0)
+    tipo = models.CharField(max_length=2, choices=[('AC', 'AC'), ('DC', 'DC')], blank=False, null=False, default='DC')
+
 
     avaliable = models.BooleanField(default=True)
 
