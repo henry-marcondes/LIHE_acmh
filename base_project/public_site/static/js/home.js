@@ -16,6 +16,7 @@ const sol = 0.5;
 const nublado = 0.2;
 const chuvoso = 0.1;
 let climaSelecionado = 'sol';  // valor inicial
+let correnteCarga = [];
 
 
 
@@ -100,7 +101,7 @@ function handleBatteryLogic() {
 
 function handlePlacaLogic() {
     const placaAlert = document.getElementById('placa_alert'); // precisa ter um <div id="placa_alert">
-    const placaItems = data.source.filter(item => item.name.toLowerCase().includes('placa'));
+    const placaItems = data.supply.filter(item => item.name.toLowerCase().includes('placa'));
 
     if (placaItems.length === 0) {
         // Nenhuma placa → limpa tudo
@@ -152,7 +153,7 @@ function removeItem(type, index) {
 let graficoInstance = null;
 let autonomia = 0;
 function updateResults() {
-    let totalSupply = batpower;  // só soma baterias
+    let totalSupply = batpower + placapower;  //
     let totalSource = 0;
 
     data.source.forEach(item => {
@@ -195,8 +196,13 @@ function calcularAutonomiaEGrafico(totalSupply, totalSource) {
     };
 
     let porcentagem = [];
+    let placaRecarga = 0 ;
     let totalPorcentagem = Object.values(tensao).reduce((a, b) => a + b, 0);
+    let amperParcial = [];
 
+    // Para cada valor de tensao, quanto a sobra de totalSupply após descontar 
+    // sua participação proporcional no total, e guarda esses resultados 
+    // no array porcentagem. Retorno do array é em Watts
     Object.values(tensao).forEach(value => {
         porcentagem.push(totalSupply - ((value / totalPorcentagem) * totalSupply));
     });
@@ -206,27 +212,43 @@ function calcularAutonomiaEGrafico(totalSupply, totalSource) {
                         climaSelecionado === 'nublado' ? nublado :
                         chuvoso;  // padrão
 
-    let placaRecarga = placapower * multiplicador;
-
-    // somar placaRecarga a cada item da lista porcentagem
+    // Se exite alguma Placa Solar calcula simula uma fator de carga
+    // Retorno é Pocententagem da Potencia da placa Watts
+    if (placapower > 0){ 
+        placaRecarga = placapower * multiplicador;
+    }
+   
+    // somar placaRecarga a cada item da lista porcentagem a cada parte da potencia de Supply)
     let porcentagemComRecarga = porcentagem.map(v => v + placaRecarga);
 
-    // transforma para horas:minutos
-    let numero = porcentagemComRecarga.map(value => (autonomia - (value / totalSource)).toFixed(2));
+    // soma todas as partes com a recarga da placa solar (w)
+    totalSupply = porcentagemComRecarga.reduce((total, numero) => total + numero, 0);
+    // debug console
+    console.log(`novo supply: ${totalSupply}`);
+
+    // Obtem a corrente parcial  W / V = Amperes
+    Object.keys(tensao).forEach(value => {
+        amperParcial.push(totalSource / value);
+    });
+  
+    //                                               
+    let numero = amperParcial;
 
     function decimalParaHorasMinutos(decimal) {
         const horas = Math.floor(decimal);
         const minutos = Math.round((decimal - horas) * 60);
         return `${horas}h ${minutos}min`;
     }
+    // transforma para horas:minutos
+    correnteCarga = numero.map(value => decimalParaHorasMinutos(Number(value)));
 
-    let correnteCarga = numero.map(value => decimalParaHorasMinutos(value));
 
     const labels = Object.keys(tensao);
-    const data = correnteCarga;
+    const data = amperParcial;
+    
 
     // Para debug no console
-    console.log(`Clima selecionado: ${climaSelecionado}`);
+    //console.log(`Clima selecionado: ${climaSelecionado}`);
     //console.log(`placapower: ${placapower}, placaRecarga: ${placaRecarga}`);
 
 
@@ -267,12 +289,25 @@ function desenharGrafico(labels, data) {
                     title: {
                         display: true,
                         text: 'Horas (H)'
+                    },
+                    
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const index = context.dataIndex;
+                            return 'Autonomia: ' + correnteCarga[index];
+                        }
                     }
                 }
             }
         }
+        
     });
 }
+
 
 window.onload = function() {
     renderItems('supply');
