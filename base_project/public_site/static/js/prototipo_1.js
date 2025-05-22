@@ -12,13 +12,14 @@ let batpower = 0;
 let batteryName = '';
 let placapower = 0;
 let placaName = '';
-let graficoInstance = null;
+
 let autonomia = 0;
 const sol = 0.8;
 const nublado = 0.4;
 const chuvoso = 0.1;
 let climaSelecionado = 'sol';  // valor inicial
-let correnteCarga = [];
+const horas = [];
+const tensoes = [];
 
 
 
@@ -42,8 +43,6 @@ function addItem(type) {
     renderItems(type);
     updateResults();
 }
-
-
 
 // Recria a lista HTML (<div>) de itens selecionados
 // Inclui botão "remover" com chamada removeItem()
@@ -178,8 +177,6 @@ function updateResults() {
         resultDiv.classList.add('nao-viavel');
         resultDiv.classList.remove('viavel');
     }
-
-    calcularAutonomiaEGrafico(totalSupply, totalSource);
 }
 
 
@@ -188,120 +185,10 @@ function setClima(clima) {
     updateResults(); // recalcula tudo com o novo clima
 }
 
+let capacidade = totalSupply/12 ; //Ah
+let carga = placapower;        //Ah Placa solar
+let consumo = 
 
-function calcularAutonomiaEGrafico(totalSupply, totalSource) {
-    const tensao = {
-        14.3: 1.99, 14.1: 2.1, 13.5: 3, 13.1: 3.3, 12.5: 5, 12.1: 6,
-        11.9: 7, 11.8: 8, 11.7: 9, 11.6: 11, 11.2: 12, 10.9: 12.7, 10.2: 19.01
-    };
-
-    let porcentagem = [];
-    let placaRecarga = 0 ;
-    let totalPorcentagem = Object.values(tensao).reduce((a, b) => a + b, 0);
-    let amperParcial = [];
-
-    // Para cada valor de tensao, quanto a sobra de totalSupply após descontar 
-    // sua participação proporcional no total, e guarda esses resultados 
-    // no array porcentagem. Retorno do array em Watts
-    Object.values(tensao).forEach(value => {
-        porcentagem.push(totalSupply - ((value / totalPorcentagem) * totalSupply));
-    });
-
-    // calcula placaRecarga com base no botão selecionado
-    let multiplicador = climaSelecionado === 'sol' ? sol :
-                        climaSelecionado === 'nublado' ? nublado :
-                        chuvoso;  // padrão
-
-    // Se exite alguma Placa Solar calcula simula uma fator de carga
-    // Retorno é Pocententagem da Potencia da placa Watts
-    if (placapower > 0){ 
-        placaRecarga = placapower * multiplicador;
-    }
-   
-    // somar placaRecarga a cada item da lista porcentagem a cada parte da potencia de Supply)
-    let porcentagemComRecarga = porcentagem.map(v => v + placaRecarga);
-
-    // soma todas as partes com a recarga da placa solar (w)
-    totalSupply = porcentagemComRecarga.reduce((total, numero) => total + numero, 0);
-    // debug console
-    console.log(`novo supply: ${totalSupply}`);
-
-    // Obtem a corrente parcial  W / V = Amperes
-    Object.keys(tensao).forEach(value => {
-        amperParcial.push(totalSource / value);
-    });
-  
-    //
-                                                
-    let numero = amperParcial
-
-    function decimalParaHorasMinutos(decimal) {
-        const horas = Math.floor(decimal);
-        const minutos = Math.round((decimal - horas) * 60);
-        return `${horas}h ${minutos}min`;
-    }
-    // transforma para horas:minutos
-    correnteCarga = numero.map(value => decimalParaHorasMinutos(Number(value)));
-
-
-    const tensao_g = Object.keys(tensao);
-    const horas = amperParcial;
-
-    desenharGrafico(horas, tensao_g);
-}
-
-function desenharGrafico(labels, data) {
-    const ctx = document.getElementById('graficoAutonomia').getContext('2d');
-
-    if (graficoInstance) {
-        graficoInstance.destroy();
-    }
-
-    graficoInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Energia Consumida por tensão (W)',
-                data: data,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: true,
-                tension: 0.1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    title: {
-                        display: true,
-                        text: 'Queda da Potência (W)'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Horas (H)'
-                    },
-                    
-                }
-            },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const index = context.dataIndex;
-                            return 'Autonomia: ' + correnteCarga[index];
-                        }
-                    }
-                }
-            }
-        }
-        
-    });
-}
 
 
 window.onload = function() {
