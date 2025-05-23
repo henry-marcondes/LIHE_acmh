@@ -1,100 +1,84 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project</title>
-    <!-- Carregar arquivos estáticos do Django -->
-    {% load static %}
-    <!--Carregar biblio chart-->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
-    <!-- Referência ao arquivo CSS -->
-    <link rel="stylesheet" href="{% static 'css/home.css' %}?v={{ timestamp }}">
-    <!--carrega o home.js e evita cache do navegador-->
-    <script src="{% static 'js/home.js' %}?v={{ timestamp }}"></script>
-    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
-
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project</title>
+  {% load static %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{% static 'css/home.css' %}?v={{ timestamp }}">
+  <script src="{% static 'js/home.js' %}?v={{ timestamp }}" defer></script>
+  <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
-    <div class="container">
-        <!-- Produz energia -->
-        <div class="box">
-          <h2>Produz energia</h2>
-          <label>Selecionar item:</label>
-          <select id="supply_selector">
-            <option value="">-- Selecione um item --</option>
-            {% for item in supply %}
-                <option value="{{ item.id }}"
-                        data-name="{{ item.product_name }}"
-                        data-power="{{ item.power }}"
-                        data-factor="{{ item.power_factor }}"
-                        data-width="{{ item.width }}"
-                        data-height="{{ item.height }}"
-                        data-depth="{{ item.depth }}">
-                {{ item.product_name }} ({{ item.power }} W)
-                </option>
-            {% endfor %}
-          </select>
-          <button onclick="addItem('supply')">Adicionar</button>
-          <div id="supply_list"></div>
-        </div>
-    
-        <!-- Consome energia -->
-        <div class="box">
-          <h2>Consome energia</h2>
-          <label>Selecionar item:</label>
-          <select id="source_selector">
-            <option value="">-- Selecione um item --</option>
-            {% for item in source %}
-                <option value="{{ item.id }}"
-                        data-name="{{ item.product_name }}"
-                        data-power="{{ item.power }}"
-                        data-factor="{{ item.power_factor }}"
-                        data-width="{{ item.width }}"
-                        data-height="{{ item.height }}"
-                        data-depth="{{ item.depth }}">
-                        <option value="{{ item.id }}"
-        data-name="{{ item.product_name }}"
-        data-power="{{ item.power }}"
-        data-factor="{{ item.power_factor }}"
-        data-width="{{ item.width }}"
-        data-height="{{ item.height }}"
-        data-depth="{{ item.depth }}"
-        data-voltage="{{ item.voltage }}"
-        data-type="{{ item.type }}">
-    {{ item.product_name }} ({{ item.power }} W, {{ item.voltage }} V, {{ item.type }})
-</option>
-            {% endfor %}
-          </select>
-          <button onclick="addItem('source')">Adicionar</button>
-          <div id="source_list"></div>
-        </div>
-      </div>
-    
-      <h2 style="text-align: center; margin-top: 20px;">Resultado</h2>
-      <div class="result" id="results">
-        <p><strong>Produção Total: </strong><span id="total_power_supply">0</span> W</p>
-        <p><strong>Consumo Total: </strong><span id="total_power_source">0</span> W</p>
-        <p><strong>Autonomia:</strong><span id="autonomy">0.00</span> H</p>
-
-        <hr>
-        <p><strong>Status do Projeto:</strong> <span id="status">Indefinido</span></p>
-      </div>
-      <div id="battery_alert" style="color: red; margin-top: 10px;"></div>
-      <div id="placa_alert"></div>
-
-    <!-- Footer -->
-    <div id="clima_buttons">
-      <button onclick="setClima('sol')">☀️ Sol</button>
-      <button onclick="setClima('nublado')">⛅ Nublado</button>
-      <button onclick="setClima('chuvoso')">🌧️ Chuvoso</button>
+  <div class="container">
+    <!-- Produz energia -->
+    <div class="box">
+      <h2>Produz energia</h2>
+      <label>Selecionar item:</label>
+      <select id="supply_selector">
+        <option value="">-- Selecione um item --</option>
+        {% for item in supply %}
+          <option value="{{ item.id }}"
+                  data-name="{{ item.product_name }}"
+                  data-power="{{ item.power }}"
+                  data-factor="{{ item.power_factor }}"
+                  data-width="{{ item.width }}"
+                  data-height="{{ item.height }}"
+                  data-depth="{{ item.depth }}">
+            {{ item.product_name }} ({{ item.power }} W)
+          </option>
+        {% endfor %}
+      </select>
+      <button onclick="addItem('supply')">Adicionar</button>
+      <div id="supply_list"></div>
     </div>
-  
-    <canvas id="graficoAutonomia"></canvas>
 
-    <div class="footer">
-        &copy; 2023 Meu Site. Todos os direitos reservados.
+    <!-- Consome energia -->
+    <div class="box">
+      <h2>Consome energia</h2>
+      <label>Selecionar item:</label>
+      <select id="source_selector">
+        <option value="">-- Selecione um item --</option>
+        {% for item in source %}
+          <option value="{{ item.id }}"
+                  data-name="{{ item.product_name }}"
+                  data-power="{{ item.power }}"
+                  data-voltage="{{ item.voltage }}"
+                  data-type="{{ item.type }}">
+            {{ item.product_name }} ({{ item.power }} W, {{ item.voltage }} V, {{ item.type }})
+          </option>
+        {% endfor %}
+      </select>
+      <button onclick="addItem('source')">Adicionar</button>
+      <div id="source_list"></div>
     </div>
+  </div>
+
+  <h2 style="text-align: center; margin-top: 20px;">Resultado</h2>
+  <div class="result" id="results">
+    <p><strong>Produção Total: </strong><span id="total_power_supply">0</span> W</p>
+    <p><strong>Consumo Total: </strong><span id="total_power_source">0</span> W</p>
+    <p><strong>Autonomia:</strong><span id="autonomy">0.00</span> H</p>
+    <hr>
+    <p><strong>Status do Projeto:</strong> <span id="status">Indefinido</span></p>
+  </div>
+  <div id="battery_alert" style="color: red; margin-top: 10px;"></div>
+  <div id="placa_alert"></div>
+
+  <div id="clima_buttons">
+    <button onclick="setClima('sol')">☀️ Sol</button>
+    <button onclick="setClima('nublado')">⛅ Nublado</button>
+    <button onclick="setClima('chuvoso')">🌧️ Chuvoso</button>
+  </div>
+
+  <!-- Gráfico da bateria -->
+  <div style="width:100%; max-width:800px; margin: 40px auto;">
+    <canvas id="batteryChart"></canvas>
+  </div>
+
+  <div class="footer">
+    &copy; 2023 Meu Site. Todos os direitos reservados.
+  </div>
 </body>
-</html>  
+</html>

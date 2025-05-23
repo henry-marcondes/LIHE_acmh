@@ -1,311 +1,174 @@
-// Mantém os itens selecionados pelo usuário
-const data = {
-    supply: [],
-    source: []
-};
+// ==== Dados e estado ====
+const data = { supply: [], source: [] };
+let climaSelecionado = 'sol';
+let batteryChart = null;
 
-// Pega o item selecionado na página (supply_selector ou source_selector)
-// Lê os dados data-* do <option>
-// Adiciona no array data[type]
-// Chama renderItems e updateResults()
-let batpower = 0;
-let batteryName = '';
-let placapower = 0;
-let placaName = '';
-let graficoInstance = null;
-let autonomia = 0;
-const sol = 0.8;
-const nublado = 0.4;
-const chuvoso = 0.1;
-let climaSelecionado = 'sol';  // valor inicial
-let correnteCarga = [];
-
-
-
+// ==== Funções de UI ====
 function addItem(type) {
-    const selectorId = type === 'supply' ? 'supply_selector' : 'source_selector';
-    const select = document.getElementById(selectorId);
-    const option = select.options[select.selectedIndex];
+  const select = document.getElementById(type === 'supply' ? 'supply_selector' : 'source_selector');
+  const opt = select.options[select.selectedIndex];
+  if (!opt || !opt.dataset.name) return;
 
-    if (!option || !option.dataset || !option.dataset.name) return;
-
-    const item = {
-        name: option.dataset.name,
-        power: parseFloat(option.dataset.power.replace(',', '.')),
-        factor: parseFloat(option.dataset.factor.replace(',', '.'))
-    };
-
-    data[type].push(item);
-
-    handleBatteryLogic();
-    handlePlacaLogic();
-    renderItems(type);
-    updateResults();
+  data[type].push({
+    name: opt.dataset.name,
+    power: parseFloat(opt.dataset.power.replace(',', '.')),
+    factor: parseFloat(opt.dataset.factor?.replace(',', '.') || 1)
+  });
+  handleBatteryLogic();
+  handlePlacaLogic();
+  renderItems(type);
+  updateResults();
+  renderBatteryChart();
 }
 
-
-
-// Recria a lista HTML (<div>) de itens selecionados
-// Inclui botão "remover" com chamada removeItem()
 function renderItems(type) {
-    const container = document.getElementById(`${type}_list`);
-    container.innerHTML = '';
-    data[type].forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.innerHTML = `
-            ${item.name} 
-            - Potência: ${item.power}W
-            
-            <button onclick="removeItem('${type}', ${index})">Remover</button>
-        `;
-        container.appendChild(div);
-    });
+  const container = document.getElementById(`${type}_list`);
+  container.innerHTML = '';
+  data[type].forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `
+      ${item.name} - ${item.power.toFixed(2)} W
+      <button onclick="removeItem('${type}', ${i})">Remover</button>
+    `;
+    container.appendChild(div);
+  });
 }
 
+function removeItem(type, idx) {
+  data[type].splice(idx, 1);
+  handleBatteryLogic();
+  handlePlacaLogic();
+  renderItems(type);
+  updateResults();
+  renderBatteryChart();
+}
+
+// ==== Lógica de bateria e placas ====
+let batpower = 0, placapower = 0;
 function handleBatteryLogic() {
-    const batteryAlert = document.getElementById('battery_alert');
-    const batteryItems = data.supply.filter(item => item.name.toLowerCase().includes('bateria'));
-
-    if (batteryItems.length === 0) {
-        // Nenhuma bateria → limpa tudo
-        batteryName = '';
-        batpower = 0;
-        batteryAlert.textContent = '';
-        return;
-    }
-
-    // Assume a primeira como referência
-    batteryName = batteryItems[0].name;
+  const bats = data.supply.filter(i => i.name.toLowerCase().includes('bateria'));
+  if (!bats.length) { batpower = 0; document.getElementById('battery_alert').textContent = ''; return; }
+  const same = bats.every(b => b.name === bats[0].name);
+  if (!same) {
     batpower = 0;
-
-    let allSame = true;
-    batteryItems.forEach(item => {
-        if (item.name !== batteryName) {
-            allSame = false;
-        }
-    });
-
-    if (allSame) {
-        // Todas iguais → soma potência e limpa alerta
-        batteryItems.forEach(item => {
-            batpower += item.power;
-        });
-        batteryAlert.textContent = '';
-    } else {
-        // Baterias diferentes → não soma, exibe alerta
-        batteryAlert.textContent = `⚠️ Não é possível somar baterias diferentes. Verifique a lista.`;
-        batpower = 0;
-    }
-
-    console.log(`Potência total de baterias (batpower): ${batpower}W`);
+    document.getElementById('battery_alert').textContent = '⚠️ Baterias diferentes não somam.';
+    return;
+  }
+  batpower = bats.reduce((s, b) => s + b.power, 0);
+  document.getElementById('battery_alert').textContent = '';
 }
 
 function handlePlacaLogic() {
-    const placaAlert = document.getElementById('placa_alert'); // precisa ter um <div id="placa_alert">
-    const placaItems = data.supply.filter(item => item.name.toLowerCase().includes('placa'));
-
-    if (placaItems.length === 0) {
-        // Nenhuma placa → limpa tudo
-        placaName = '';
-        placapower = 0;
-        placaAlert.textContent = '';
-        return;
-    }
-
-    // Assume a primeira como referência
-    placaName = placaItems[0].name;
+  const pls = data.supply.filter(i => i.name.toLowerCase().includes('placa'));
+  if (!pls.length) { placapower = 0; document.getElementById('placa_alert').textContent = ''; return; }
+  const same = pls.every(p => p.name === pls[0].name);
+  if (!same) {
     placapower = 0;
-    
-
-    let allSame = true;
-    placaItems.forEach(item => {
-        if (item.name !== placaName) {
-            allSame = false;
-        }
-    });
-
-    if (allSame) {
-        // Todas iguais → soma potência e limpa alerta
-        placaItems.forEach(item => {
-            placapower += item.power;
-        });
-        placaAlert.textContent = '';
-    } else {
-        // Placas diferentes → não soma, exibe alerta
-        placaAlert.textContent = `⚠️ Não é possível somar placas solares diferentes. Verifique a lista.`;
-        placapower = 0;
-    }
-
-    console.log(`Potência total de placas solares (placapower): ${placapower}W`);
+    document.getElementById('placa_alert').textContent = '⚠️ Placas diferentes não somam.';
+    return;
+  }
+  placapower = pls.reduce((s, p) => s + p.power, 0);
+  document.getElementById('placa_alert').textContent = '';
 }
 
-
-// Remove o item pelo índice
-// Atualiza visual e totais
-function removeItem(type, index) {
-    data[type].splice(index, 1);
-    handleBatteryLogic();
-    handlePlacaLogic();
-    renderItems(type);
-    updateResults();
-}
-
-// Atualiza resultados totais e status
+// ==== Resultados e status ====
 function updateResults() {
-    let totalSupply = data.supply
-        .filter(item => item.name.toLowerCase().includes('bateria') || item.name.toLowerCase().includes('placa'))
-        .reduce((sum, item) => sum + item.power, 0);
+  const totalSupply = batpower + placapower;
+  const totalSource = data.source.reduce((s, i) => s + i.power, 0);
 
-    let totalSource = data.source.reduce((sum, item) => sum + item.power, 0);
+  const tempoDescarga = totalSource > 0 ? totalSupply / totalSource : 0;
+  const autonomia = tempoDescarga * 0.8;
 
-    tempoDescarga = totalSource > 0 ? totalSupply / totalSource : 0;
-    autonomia = tempoDescarga * 0.80 ; // para preservar a bateria usualmente só se usa 80% da carga total
+  document.getElementById('total_power_supply').textContent = totalSupply.toFixed(2);
+  document.getElementById('total_power_source').textContent = totalSource.toFixed(2);
+  document.getElementById('autonomy').textContent = autonomia.toFixed(2);
 
-    document.getElementById('total_power_supply').textContent = totalSupply.toFixed(2);
-    document.getElementById('total_power_source').textContent = totalSource.toFixed(2);
-    document.getElementById('autonomy').textContent = autonomia.toFixed(2);
-
-    const resultDiv = document.getElementById('results');
-    const statusText = document.getElementById('status');
-
-    if (totalSupply >= totalSource) {
-        statusText.textContent = 'Viável ✅';
-        resultDiv.classList.add('viavel');
-        resultDiv.classList.remove('nao-viavel');
-    } else {
-        statusText.textContent = 'Não Viável ❌';
-        resultDiv.classList.add('nao-viavel');
-        resultDiv.classList.remove('viavel');
-    }
-
-    calcularAutonomiaEGrafico(totalSupply, totalSource);
+  const statusEl = document.getElementById('status');
+  if (totalSupply >= totalSource) {
+    statusEl.textContent = 'Viável ✅';
+  } else {
+    statusEl.textContent = 'Não Viável ❌';
+  }
 }
 
-
+// ==== Clima ====
 function setClima(clima) {
-    climaSelecionado = clima;
-    updateResults(); // recalcula tudo com o novo clima
+  climaSelecionado = clima;
+  updateResults();
+  renderBatteryChart();
 }
 
+// ==== Gráfico da bateria com Chart.js ====
+function renderBatteryChart() {
+  // Reuso totals já calculados
+  const totalSupply = batpower + placapower;
+  const totalSource = data.source.reduce((s, i) => s + i.power, 0);
+  const capacidade = totalSupply / 12;   // em Ah
+  let carga = capacidade * 0.8;          // carga inicial 80%
+  const consumo = totalSource / 12;      // A
+  const dias = 3, passoMin = 10;
+  const passos = dias * 24 * 60 / passoMin;
+  const fatorClimaArr = Array.from({ length: passos+1 }, (_, i) => {
+    const dia = Math.floor(i / ((passos+1)/3));
+    if (climaSelecionado === 'sol') return 1;
+    if (climaSelecionado === 'nublado') return 0.6;
+    return 0.2;
+  });
 
-function calcularAutonomiaEGrafico(totalSupply, totalSource) {
-    const tensao = {
-        14.3: 1.99, 14.1: 2.1, 13.5: 3, 13.1: 3.3, 12.5: 5, 12.1: 6,
-        11.9: 7, 11.8: 8, 11.7: 9, 11.6: 11, 11.2: 12, 10.9: 12.7, 10.2: 19.01
-    };
+  const horas = [], tensoes = [];
+  for (let i = 0; i <= passos; i++) {
+    const h = i * passoMin / 60;
+    horas.push(h.toFixed(2));
+    const horaDoDia = h % 24;
 
-    let porcentagem = [];
-    let placaRecarga = 0 ;
-    let totalPorcentagem = Object.values(tensao).reduce((a, b) => a + b, 0);
-    let amperParcial = [];
-
-    // Para cada valor de tensao, quanto a sobra de totalSupply após descontar 
-    // sua participação proporcional no total, e guarda esses resultados 
-    // no array porcentagem. Retorno do array em Watts
-    Object.values(tensao).forEach(value => {
-        porcentagem.push(totalSupply - ((value / totalPorcentagem) * totalSupply));
-    });
-
-    // calcula placaRecarga com base no botão selecionado
-    let multiplicador = climaSelecionado === 'sol' ? sol :
-                        climaSelecionado === 'nublado' ? nublado :
-                        chuvoso;  // padrão
-
-    // Se exite alguma Placa Solar calcula simula uma fator de carga
-    // Retorno é Pocententagem da Potencia da placa Watts
-    if (placapower > 0){ 
-        placaRecarga = placapower * multiplicador;
+    let correnteSolar = 0;
+    if (horaDoDia >= 6 && horaDoDia <= 18) {
+      const fator = Math.sin(Math.PI * (horaDoDia - 6) / 12);
+      correnteSolar = fator * fatorClimaArr[i] * (placapower / 12); 
     }
-   
-    // somar placaRecarga a cada item da lista porcentagem a cada parte da potencia de Supply)
-    let porcentagemComRecarga = porcentagem.map(v => v + placaRecarga);
+    const net = correnteSolar - consumo;
+    carga = Math.max(0, Math.min(capacidade, carga + net * (passoMin/60)));
+    tensoes.push((9.5 + (carga/capacidade)*(14.5-9.5)).toFixed(2));
+  }
 
-    // soma todas as partes com a recarga da placa solar (w)
-    totalSupply = porcentagemComRecarga.reduce((total, numero) => total + numero, 0);
-    // debug console
-    console.log(`novo supply: ${totalSupply}`);
-
-    // Obtem a corrente parcial  W / V = Amperes
-    Object.keys(tensao).forEach(value => {
-        amperParcial.push(totalSource / value);
-    });
-  
-    //
-                                                
-    let numero = amperParcial
-
-    function decimalParaHorasMinutos(decimal) {
-        const horas = Math.floor(decimal);
-        const minutos = Math.round((decimal - horas) * 60);
-        return `${horas}h ${minutos}min`;
-    }
-    // transforma para horas:minutos
-    correnteCarga = numero.map(value => decimalParaHorasMinutos(Number(value)));
-
-
-    const tensao_g = Object.keys(tensao);
-    const horas = amperParcial;
-
-    desenharGrafico(horas, tensao_g);
-}
-
-function desenharGrafico(labels, data) {
-    const ctx = document.getElementById('graficoAutonomia').getContext('2d');
-
-    if (graficoInstance) {
-        graficoInstance.destroy();
-    }
-
-    graficoInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Energia Consumida por tensão (W)',
-                data: data,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: true,
-                tension: 0.1
-            }]
+  // Se já existe, atualiza; senão, cria
+  const ctx = document.getElementById('batteryChart').getContext('2d');
+  if (batteryChart) {
+    batteryChart.data.labels = horas;
+    batteryChart.data.datasets[0].data = tensoes;
+    batteryChart.update();
+  } else {
+    batteryChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: horas,
+        datasets: [{
+          label: 'Tensão da Bateria (V)',
+          data: tensoes,
+          borderColor: 'green',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false
+        }]
+      },
+      options: {
+        scales: {
+          x: { title: { display: true, text: 'Tempo (h)' } },
+          y: { title: { display: true, text: 'Tensão (V)' }, min: 9, max: 15 }
         },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    title: {
-                        display: true,
-                        text: 'Queda da Potência (W)'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Horas (H)'
-                    },
-                    
-                }
-            },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const index = context.dataIndex;
-                            return 'Autonomia: ' + correnteCarga[index];
-                        }
-                    }
-                }
-            }
+        plugins: {
+          title: { display: true, text: 'Tensão da Bateria em 3 Dias' }
         }
-        
+      }
     });
+  }
 }
 
-
-window.onload = function() {
-    renderItems('supply');
-    renderItems('source');
-    updateResults();
-};
+// ==== Inicialização ====
+window.addEventListener('DOMContentLoaded', () => {
+  renderItems('supply');
+  renderItems('source');
+  updateResults();
+  renderBatteryChart();
+});
