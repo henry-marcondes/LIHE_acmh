@@ -1,0 +1,4 @@
+django==5.1.2
+faker==30.8.1
+mysqlclient==2.2.5
+python-dotenv==1.0.1
