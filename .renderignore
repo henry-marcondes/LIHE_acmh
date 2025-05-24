@@ -1,6 +1,0 @@
-poetry.lock
-pyproject.toml
-*
-!base_project/
-!render.yaml
-
