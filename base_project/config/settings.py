@@ -95,18 +95,33 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     },
+#     'mysql_db': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': os.getenv('DB_NAME', 'project'),              # Nome do banco de dados
+#         'USER': os.getenv('DB_USER', 'seu_usuario'),            # Usuário do banco de dados
+#         'PASSWORD': os.getenv('DB_PASSWORD', 'sua_senha'),      # Senha do banco de dados
+#         'HOST': os.getenv('DB_HOST', '127.0.0.1'),              # Endereço do servidor (pode ser 'localhost' para local)
+#         'PORT': os.getenv('DB_PORT', '3306'),                   # Porta do MySQL, geralmente 3306
+#         'OPTIONS': {
+#             'sql_mode': 'STRICT_TRANS_TABLES',
+#             'charset': 'utf8mb4',
+#         },
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'mysql_db': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'project'),              # Nome do banco de dados
-        'USER': os.getenv('DB_USER', 'seu_usuario'),            # Usuário do banco de dados
-        'PASSWORD': os.getenv('DB_PASSWORD', 'sua_senha'),      # Senha do banco de dados
-        'HOST': os.getenv('DB_HOST', '127.0.0.1'),              # Endereço do servidor (pode ser 'localhost' para local)
-        'PORT': os.getenv('DB_PORT', '3306'),                   # Porta do MySQL, geralmente 3306
+        'NAME': os.getenv('DB_NAME', 'project'),
+        'USER': os.getenv('DB_USER', 'henry'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'sua_senha'),
+        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+        'PORT': os.getenv('DB_PORT', '3306'),
         'OPTIONS': {
             'sql_mode': 'STRICT_TRANS_TABLES',
             'charset': 'utf8mb4',
@@ -114,7 +129,8 @@ DATABASES = {
     }
 }
 
-DATABASE_ROUTERS = ['config.routers.MySQLRouter']
+
+#DATABASE_ROUTERS = ['config.routers.MySQLRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
