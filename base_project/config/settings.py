@@ -32,8 +32,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-fl8su)fsgsisy-!y$cz
 CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', False)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = os.getenv('DEBUG_MODE', True)
-DEBUG = os.getenv('DEBUG_MODE', False)
+DEBUG = os.getenv('DEBUG_MODE', True)
+#DEBUG = os.getenv('DEBUG_MODE', False)
 
 ALLOWED_HOSTS = [
     'www.pi1-univesp.onrender.com',
