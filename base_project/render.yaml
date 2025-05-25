@@ -2,7 +2,6 @@ services:
   - type: web
     name: pi1-univesp
     env: python
-    workingDirectory: base_project
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn config.wsgi:application"
     envVars:
