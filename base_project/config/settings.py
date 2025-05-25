@@ -32,7 +32,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-fl8su)fsgsisy-!y$cz
 CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', False)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG_MODE', True)
+#DEBUG = os.getenv('DEBUG_MODE', True)
+DEBUG = os.getenv('DEBUG_MODE', False) == True
 
 ALLOWED_HOSTS = [
     'www.pi1-univesp.onrender.com',
@@ -117,11 +118,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'project'),
-        'USER': os.getenv('DB_USER', 'henry'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'sua_senha'),
-        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+        'NAME': 'railway',
+        'USER': 'root',
+        'PASSWORD': 'tQUjKpjnzKYoWxlBpWdJqwsWPmLEdIKE',
+        'HOST': 'shinkansen.proxy.rlwy.net',
+        'PORT': '38033',
         'OPTIONS': {
             'sql_mode': 'STRICT_TRANS_TABLES',
             'charset': 'utf8mb4',
