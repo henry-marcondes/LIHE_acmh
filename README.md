@@ -1,6 +1,4 @@
-# Univesp PI 1
-
-Projeto Integrador I
+# Analise de Produção e consumo de Energia de Motor Homes
 
 ## Dependências
 
@@ -8,29 +6,24 @@ Projeto Integrador I
  * faker 30.8.1
  * mysqlclient 2.2.5
  * python-dotenv 1.0.1
+ * whitenoise 6.9.0
 
-## Participantes:
+## Autores:
 
 ```
-MARCELO ANDRADE DA SILVA
 LUCAS CAMPOS ACHCAR
-ANTONIO DONIZETE DRAGO
 HENRY FERNANDO ESPINDOLA MARCONDES
-LUIZ GUSTAVO MUNIZ MOTA PEREIRA
-PIETRO SALLUM FERREIRA
-CRISTINA SILVA GOMES RIBEIRO
-JOSE WAGNER DE OLIVEIRA
 ```
 
 ## Demo do projeto
 
-* [Link - site de demonstração](https://pi1-univesp.onrender.com/)
+* [Link - site de demonstração](https://pi1-univesp_1.onrender.com/)
 
 ## Preview
 
 <p float="left">
-  <img src="./images/b80ae4f7-a855-4e73-934b-af8204c2d360.jpeg" width="60%" />
-  <img src="./images/e18ae8d4-aaf8-42b0-be82-46d6bfbf5dcb.jpeg" width="60%" />
+  <img src="./images/foto_1.png" width="60%" />
+  <img src="./images/foto_2.png" width="60%" />
 </p>
 
 ## Instalação e Configuração
