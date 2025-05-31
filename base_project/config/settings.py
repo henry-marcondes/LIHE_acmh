@@ -83,18 +83,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'railway',
-        'USER': 'root',
-        'PASSWORD': 'tQUjKpjnzKYoWxlBpWdJqwsWPmLEdIKE',
-        'HOST': 'shinkansen.proxy.rlwy.net',
-        'PORT': '38033',
+        'ENGINE': config('DB_ENGINE'),
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
         'OPTIONS': {
             'sql_mode': 'STRICT_TRANS_TABLES',
             'charset': 'utf8mb4',
         },
     }
 }
+
 
 
 AUTH_PASSWORD_VALIDATORS = [

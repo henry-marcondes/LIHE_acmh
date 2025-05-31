@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.utils import timezone
 
 from .models import Product
+from .forms import UsuarioForm
 
 # Create your views here.
 
@@ -23,3 +24,16 @@ def home(request):
         'source': source,
         'timestamp': timezone.now().timestamp(),  # adiciona o timestamp
     })
+
+def cadastro_view(request):
+    if request.method == 'POST':
+        form = UsuarioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home') # ou qualquer outra página após cadastro
+    else:
+        form = UsuarioForm()
+    return render(request, 'resources/cadastro.html', {'form':form})
+
+
+
