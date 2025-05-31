@@ -23,16 +23,19 @@ CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', False)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG_MODE', True)
 
-ALLOWED_HOSTS = [
-    'lihe-acmh.onrender.com',  # novo domínio
+AALLOWED_HOSTS = [
+    'lihe-acmh.onrender.com',
+    'www.lihe-acmh.onrender.com',
     'localhost',
     '127.0.0.1',
     '0.0.0.0',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://lihe-acmh.onrender.com',  # novo domínio
+    'https://lihe-acmh.onrender.com',
+    'https://www.lihe-acmh.onrender.com',
 ]
+
 
 
 # Application definition
