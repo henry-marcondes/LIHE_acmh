@@ -24,19 +24,16 @@ CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', False)
 DEBUG = os.getenv('DEBUG_MODE', True)
 
 ALLOWED_HOSTS = [
-    'www.pi1-univesp.onrender.com',
-    'pi1-univesp.onrender.com',
-    'pi1-univesp-1.onrender.com', 
+    'lihe-acmh.onrender.com',  # novo domínio
     'localhost',
     '127.0.0.1',
     '0.0.0.0',
 ]
 
-
 CSRF_TRUSTED_ORIGINS = [
-    'https://pi1-univesp.onrender.com',
-    'https://www.pi1-univesp.onrender.com',
+    'https://lihe-acmh.onrender.com',  # novo domínio
 ]
+
 
 # Application definition
 
