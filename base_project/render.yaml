@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: pi1-univesp
+    name: lihe-acmh
     env: python
     workingDirectory: base_project
     buildCommand: "pip install -r requirements.txt"
