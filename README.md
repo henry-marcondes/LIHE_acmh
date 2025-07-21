@@ -19,6 +19,8 @@ HENRY FERNANDO ESPINDOLA MARCONDES
 
 * [Link - site de demonstração](https://pi1-univesp_1.onrender.com/)
 
+Usuário: Admin  senha: henry1234
+
 ## Preview
 
 <p float="left">
@@ -75,21 +77,7 @@ Faça uma copia do ```base_project/.env-exemplo``` para ```base_project/.env```
 
 Abra o ```base_project/.env``` e faça as configurações do MySQL
 
-```
-DEBUG_MODE=True
 
-DB_NAME=railway         # nome do banco de dados
-DB_USER=root            # usuário do banco de dados
-DB_PASSWORD= tQUjKpjnzKYoWxlBpWdJqwsWPmLEdIKE # senha do banco de dados
-DB_HOST=shinkansen.proxy.rlwy.net      # ou o IP do servidor de banco de dados
-DB_PORT=38033                          # porta padrão do MySQL
-
-DJANGO_SECRET_KEY="django-insecure-fl8su)fsgsisy-!y$cz-ff=*u4@7fxh)@o#3o2riesshqzqz%-"
-CSRF_COOKIE_SECURE=False
-
-DJANGO_SECRET_KEY="django-insecure-fl8su)fsgsisy-!y$cz-ff=*u4@7fxh)@o#3o2riesshqzqz%-"
-CSRF_COOKIE_SECURE=False
-```
 
 ## Configuração das migrations do MySQL
 
@@ -113,6 +101,8 @@ todos os comandos acima funcionarem corretamente
 Após feito toda a instalação e configuração, digite o 
 seguinte comando no terminal dentro da pasta ```base_project``` 
 
-```python manage.py runserver```
+```python3 manage.py runserver```
 
 O DJango irá dar acesso a página pelo ip ```http://127.0.0.1:8000/```
+
+
