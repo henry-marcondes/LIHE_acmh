@@ -17,7 +17,7 @@ HENRY FERNANDO ESPINDOLA MARCONDES
 
 ## Demo do projeto
 
-* [Link - site de demonstração](https://pi1-univesp_1.onrender.com/)
+http://127.0.0.1:8000/admin/
 
 Usuário: Admin  senha: henry1234
 
@@ -104,5 +104,7 @@ seguinte comando no terminal dentro da pasta ```base_project```
 ```python3 manage.py runserver```
 
 O DJango irá dar acesso a página pelo ip ```http://127.0.0.1:8000/```
+
+
 
 
